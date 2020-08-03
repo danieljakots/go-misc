@@ -139,6 +139,26 @@ func nextMoonPhases(days int, measurementsPerDay int, pound *bool) {
 	}
 }
 
+func nextMoonState(state string) {
+	var percentage float64
+	switch state {
+	case "full":
+		percentage = 100
+	case "new":
+		percentage = 0
+	}
+	date := time.Now()
+	for {
+		potm := checkMoonPhase(date)
+		if percentage == math.Round(potm) {
+			// Mon Jan 2 15:04:05 -0700 MST 2006
+			fmt.Printf("%v:00\n",date.Format("2006-01-02T15 MST"))
+			break
+		}
+		date = date.Add(1 * time.Hour)
+	}
+}
+
 func main() {
 	now := flag.Bool("now", false, "Moon status right now")
 	weeklyMode := flag.Bool("week", false,
@@ -147,17 +167,26 @@ func main() {
 		"Moon status for the next 28 days")
 	pound := flag.Bool("pound", false,
 		"Print moon status with pounds instead, works for !now")
+	nextFullMoon := flag.Bool("full", false, "Give next full moon date")
+	nextNewMoon := flag.Bool("new", false, "Give next new moon date")
 	flag.Parse()
 
-	if !*now && !*weeklyMode && !*monthlyMode {
+	if (*now && *weeklyMode) || (*now && *monthlyMode) ||
+		(*weeklyMode && *monthlyMode) {
+		log.Print("Error: multiple modes selected. Pick only one")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
+	if !*now && !*weeklyMode && !*monthlyMode && !*nextFullMoon && !*nextNewMoon {
 		log.Print("The mode is missing. Pick one")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
-	if (*now && *weeklyMode) || (*now && *monthlyMode) ||
-		(*weeklyMode && *monthlyMode) {
-		log.Print("Error: multiple modes selected. Pick only one")
+	if *now || *weeklyMode || *monthlyMode && (*nextFullMoon || *nextNewMoon) {
+		log.Print("Can't use mode AND get the next (full|new) moon.")
+		log.Print("Pick one or the other.")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -172,4 +201,9 @@ func main() {
 		nextMoonPhases(28, 2, pound)
 	}
 
+	if *nextFullMoon {
+		nextMoonState("full")
+	} else if *nextNewMoon {
+		nextMoonState("new")
+	}
 }
