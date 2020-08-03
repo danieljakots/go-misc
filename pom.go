@@ -137,7 +137,6 @@ func nextMoonPhases(days int, measurementsPerDay int, pound *bool) {
 	for _, p := range measures {
 		p.print(pound)
 	}
-
 }
 
 func main() {
