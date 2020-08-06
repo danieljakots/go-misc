@@ -94,6 +94,15 @@ func currentMoonPhase() {
 	now := time.Now()
 	percentageNow := checkMoonPhase(now)
 	state := ""
+	// 0 == New Moon
+	// 0 < Waxing Crescent < 50
+	// 50 == First Quarter
+	// 50 < Waxing Gibbous < 100
+	// 100 == Full moon
+	// 100 > Waning Gibbous > 50
+	// 50 == Last Quarter
+	// 50 > Waning Crescent > 0
+	// 0 == New Moon
 	if math.Round(percentageNow) == 100 {
 		state = "Full"
 	} else if math.Round(percentageNow) == 0 {
