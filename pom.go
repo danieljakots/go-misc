@@ -184,7 +184,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if *now || *weeklyMode || *monthlyMode && (*nextFullMoon || *nextNewMoon) {
+	if (*now || *weeklyMode || *monthlyMode) && (*nextFullMoon || *nextNewMoon) {
 		log.Print("Can't use mode AND get the next (full|new) moon.")
 		log.Print("Pick one or the other.")
 		flag.PrintDefaults()
