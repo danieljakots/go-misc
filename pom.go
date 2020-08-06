@@ -110,10 +110,23 @@ func currentMoonPhase() {
 	} else {
 		tomorrow := time.Now().Add(24 * time.Hour)
 		percentageTomorrow := checkMoonPhase(tomorrow)
-		if percentageTomorrow > percentageNow {
-			state = "First quarter"
-		} else {
-			state = "Last quarter"
+		if math.Round(percentageNow) == 50 {
+			if percentageTomorrow > percentageNow {
+				state = "First quarter"
+			} else {
+				state = "Last quarter"
+			}
+		} else { // percentage != 50
+			if percentageTomorrow > percentageNow {
+				state = "Waxing"
+			} else {
+				state = "Waning"
+			}
+			if percentageNow < 50 {
+				state = state + " Crescent"
+			} else {
+				state = state + " Gibbous"
+			}
 		}
 	}
 	potmNow := potm{state: state, percentage: percentageNow, date: now}
