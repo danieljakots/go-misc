@@ -193,14 +193,22 @@ func main() {
 	nextNewMoon := flag.Bool("new", false, "Give next new moon date")
 	flag.Parse()
 
-	if (*now && *weeklyMode) || (*now && *monthlyMode) ||
-		(*weeklyMode && *monthlyMode) {
+	modeSelected := 0
+	if *now {
+		modeSelected += 1
+	}
+	if *weeklyMode {
+		modeSelected += 1
+	}
+	if *monthlyMode {
+		modeSelected += 1
+	}
+	if modeSelected > 1 {
 		log.Print("Error: multiple modes selected. Pick only one")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
-
-	if !*now && !*weeklyMode && !*monthlyMode && !*nextFullMoon && !*nextNewMoon {
+	if modeSelected == 0 {
 		log.Print("The mode is missing. Pick one")
 		flag.PrintDefaults()
 		os.Exit(1)
