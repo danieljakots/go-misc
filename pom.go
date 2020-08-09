@@ -180,6 +180,31 @@ func whenNextMoonState(state string) {
 	}
 }
 
+func statusAtDate(date string) {
+	var parsedTime time.Time
+	var err error
+	if len(date) == 7 {
+		parsedTime, err = time.Parse("2006-01", date)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if len(date) == 10 {
+		parsedTime, err = time.Parse("2006-01-02", date)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if len(date) == 13 {
+		parsedTime, err = time.Parse("2006-01-02:15", date)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		log.Fatal("Date format is wrong, should be YYYY-MM[-DD[:HH]]")
+	}
+
+	particularMoonPhase(parsedTime)
+}
+
 func main() {
 	now := flag.Bool("now", false, "Moon status right now")
 	weeklyMode := flag.Bool("week", false,
@@ -190,6 +215,8 @@ func main() {
 		"Print moon status with pounds instead, works for !now")
 	nextFullMoon := flag.Bool("full", false, "Give next full moon date")
 	nextNewMoon := flag.Bool("new", false, "Give next new moon date")
+	date := flag.String("date", "",
+		"Returns moon status at given date (YYYY-MM[-DD[:HH]] format")
 	flag.Parse()
 
 	modeSelected := 0
@@ -206,6 +233,9 @@ func main() {
 		modeSelected += 1
 	}
 	if *nextNewMoon {
+		modeSelected += 1
+	}
+	if *date != "" {
 		modeSelected += 1
 	}
 	if modeSelected > 1 {
@@ -230,5 +260,7 @@ func main() {
 		whenNextMoonState("full")
 	} else if *nextNewMoon {
 		whenNextMoonState("new")
+	} else if *date != "" {
+		statusAtDate(*date)
 	}
 }
