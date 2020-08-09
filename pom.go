@@ -180,7 +180,7 @@ func whenNextMoonState(state string) {
 	}
 }
 
-func statusAtDate(date string) {
+func statusAtDate(date string, pound *bool) {
 	var parsedTime time.Time
 	var err error
 	if len(date) == 7 {
@@ -188,21 +188,22 @@ func statusAtDate(date string) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		nextMoonPhases(28, 2, pound, parsedTime)
 	} else if len(date) == 10 {
 		parsedTime, err = time.Parse("2006-01-02", date)
 		if err != nil {
 			log.Fatal(err)
 		}
+		nextMoonPhases(7, 4, pound, parsedTime)
 	} else if len(date) == 13 {
 		parsedTime, err = time.Parse("2006-01-02:15", date)
 		if err != nil {
 			log.Fatal(err)
 		}
+		particularMoonPhase(parsedTime)
 	} else {
 		log.Fatal("Date format is wrong, should be YYYY-MM[-DD[:HH]]")
 	}
-
-	particularMoonPhase(parsedTime)
 }
 
 func main() {
@@ -263,6 +264,6 @@ func main() {
 	} else if *nextNewMoon {
 		whenNextMoonState("new")
 	} else if *date != "" {
-		statusAtDate(*date)
+		statusAtDate(*date, pound)
 	}
 }
