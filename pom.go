@@ -222,15 +222,11 @@ func main() {
 
 	if *now {
 		currentMoonPhase()
-	}
-	if *weeklyMode {
+	} else if *weeklyMode {
 		nextMoonPhases(7, 4, pound)
-	}
-	if *monthlyMode {
+	} else if *monthlyMode {
 		nextMoonPhases(28, 2, pound)
-	}
-
-	if *nextFullMoon {
+	} else if *nextFullMoon {
 		nextMoonState("full")
 	} else if *nextNewMoon {
 		nextMoonState("new")
