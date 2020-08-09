@@ -50,7 +50,7 @@ func dtor(deg float64) float64 {
  *
  * Taken from OpenBSD pom.c
  */
-func Potm(days float64) float64 {
+func calculatePercentage(days float64) float64 {
 	var N, Msol, Ec, LambdaSol, l, Mm, Ev, Ac, A3, Mmprime float64
 	var A4, lprime, V, ldprime, D, Nm float64
 
@@ -80,19 +80,19 @@ func Potm(days float64) float64 {
 	return (50.0 * (1 - math.Cos(dtor(D))))           /* sec 67 #3 */
 }
 
-func checkMoonPhase(date time.Time) float64 {
+func moonPercentage(date time.Time) float64 {
 	someSpecialDate, err := time.Parse("2006010215", someSpecialTimeStamp)
 	if err != nil {
 		log.Panic(err)
 	}
 	delta := date.Sub(someSpecialDate)
 	days := delta.Hours() / 24
-	return Potm(days)
+	return calculatePercentage(days)
 }
 
-func currentMoonPhase() {
+func particularMoonPhase() {
 	now := time.Now()
-	percentageNow := checkMoonPhase(now)
+	percentageNow := moonPercentage(now)
 	state := ""
 	// 0 == New Moon
 	// 0 < Waxing Crescent < 50
@@ -154,14 +154,14 @@ func nextMoonPhases(days int, measurementsPerDay int, pound *bool) {
 	for i := 0; i < (measurementsPerDay * days); i += 1 {
 		frequency := 24 / measurementsPerDay
 		date := time.Now().Add(time.Duration(frequency*i) * time.Hour)
-		measures[i] = potm{date: date, percentage: checkMoonPhase(date)}
+		measures[i] = potm{date: date, percentage: moonPercentage(date)}
 	}
 	for _, p := range measures {
 		p.print(pound)
 	}
 }
 
-func nextMoonState(state string) {
+func whenNextMoonState(state string) {
 	var percentage float64
 	switch state {
 	case "full":
@@ -171,7 +171,7 @@ func nextMoonState(state string) {
 	}
 	date := time.Now()
 	for {
-		potm := checkMoonPhase(date)
+		potm := moonPercentage(date)
 		if percentage == math.Round(potm) {
 			// Mon Jan 2 15:04:05 -0700 MST 2006
 			fmt.Printf("%v:00\n", date.Format("2006-01-02T15 MST"))
@@ -221,14 +221,14 @@ func main() {
 	}
 
 	if *now {
-		currentMoonPhase()
+		particularMoonPhase()
 	} else if *weeklyMode {
 		nextMoonPhases(7, 4, pound)
 	} else if *monthlyMode {
 		nextMoonPhases(28, 2, pound)
 	} else if *nextFullMoon {
-		nextMoonState("full")
+		whenNextMoonState("full")
 	} else if *nextNewMoon {
-		nextMoonState("new")
+		whenNextMoonState("new")
 	}
 }
