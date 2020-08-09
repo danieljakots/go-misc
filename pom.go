@@ -148,11 +148,11 @@ func (p potm) print(pound *bool) {
 	}
 }
 
-func nextMoonPhases(days int, measurementsPerDay int, pound *bool) {
+func nextMoonPhases(days int, measurementsPerDay int, pound *bool, beg time.Time) {
 	measures := make([]potm, measurementsPerDay*days)
 	for i := 0; i < (measurementsPerDay * days); i += 1 {
 		frequency := 24 / measurementsPerDay
-		date := time.Now().Add(time.Duration(frequency*i) * time.Hour)
+		date := beg.Add(time.Duration(frequency*i) * time.Hour)
 		measures[i] = potm{date: date, percentage: moonPercentage(date)}
 	}
 	for _, p := range measures {
@@ -253,9 +253,11 @@ func main() {
 		now := time.Now()
 		particularMoonPhase(now)
 	} else if *weeklyMode {
-		nextMoonPhases(7, 4, pound)
+		now := time.Now()
+		nextMoonPhases(7, 4, pound, now)
 	} else if *monthlyMode {
-		nextMoonPhases(28, 2, pound)
+		now := time.Now()
+		nextMoonPhases(28, 2, pound, now)
 	} else if *nextFullMoon {
 		whenNextMoonState("full")
 	} else if *nextNewMoon {
