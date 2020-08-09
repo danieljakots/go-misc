@@ -203,6 +203,12 @@ func main() {
 	if *monthlyMode {
 		modeSelected += 1
 	}
+	if *nextFullMoon {
+		modeSelected += 1
+	}
+	if *nextNewMoon {
+		modeSelected += 1
+	}
 	if modeSelected > 1 {
 		log.Print("Error: multiple modes selected. Pick only one")
 		flag.PrintDefaults()
@@ -210,13 +216,6 @@ func main() {
 	}
 	if modeSelected == 0 {
 		log.Print("The mode is missing. Pick one")
-		flag.PrintDefaults()
-		os.Exit(1)
-	}
-
-	if (*now || *weeklyMode || *monthlyMode) && (*nextFullMoon || *nextNewMoon) {
-		log.Print("Can't use mode AND get the next (full|new) moon.")
-		log.Print("Pick one or the other.")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
