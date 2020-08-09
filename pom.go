@@ -90,9 +90,8 @@ func moonPercentage(date time.Time) float64 {
 	return calculatePercentage(days)
 }
 
-func particularMoonPhase() {
-	now := time.Now()
-	percentageNow := moonPercentage(now)
+func particularMoonPhase(date time.Time) {
+	percentageNow := moonPercentage(date)
 	state := ""
 	// 0 == New Moon
 	// 0 < Waxing Crescent < 50
@@ -108,8 +107,8 @@ func particularMoonPhase() {
 	} else if math.Round(percentageNow) == 0 {
 		state = "New"
 	} else {
-		tomorrow := time.Now().Add(24 * time.Hour)
-		percentageTomorrow := checkMoonPhase(tomorrow)
+		tomorrow := date.Add(24 * time.Hour)
+		percentageTomorrow := moonPercentage(tomorrow)
 		if math.Round(percentageNow) == 50 {
 			if percentageTomorrow > percentageNow {
 				state = "First quarter"
@@ -129,7 +128,7 @@ func particularMoonPhase() {
 			}
 		}
 	}
-	potmNow := potm{state: state, percentage: percentageNow, date: now}
+	potmNow := potm{state: state, percentage: percentageNow, date: date}
 	f := false
 	potmNow.print(&f)
 }
@@ -221,7 +220,8 @@ func main() {
 	}
 
 	if *now {
-		particularMoonPhase()
+		now := time.Now()
+		particularMoonPhase(now)
 	} else if *weeklyMode {
 		nextMoonPhases(7, 4, pound)
 	} else if *monthlyMode {
