@@ -173,7 +173,6 @@ func whenNextMoonState(state string) {
 	for {
 		potm := moonPercentage(date)
 		if percentage == math.Round(potm) {
-			// Mon Jan 2 15:04:05 -0700 MST 2006
 			fmt.Printf("%v:00 %v\n", date.Format("2006-01-02T15"),
 				date.Format("MST"))
 			break
