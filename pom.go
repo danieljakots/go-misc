@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -188,7 +189,7 @@ func statusAtDate(date string, pound *bool) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		nextMoonPhases(28, 2, pound, parsedTime)
+		nextMoonPhases(daysInAMonth(parsedTime), 2, pound, parsedTime)
 	} else if len(date) == 10 {
 		parsedTime, err = time.Parse("2006-01-02", date)
 		if err != nil {
@@ -204,6 +205,19 @@ func statusAtDate(date string, pound *bool) {
 	} else {
 		log.Fatal("Date format is wrong, should be YYYY-MM[-DD[:HH]]")
 	}
+}
+
+func daysInAMonth(date time.Time) int {
+	year, month, _ := date.Date()
+	currentLocation := date.Location()
+	firstOfMonth := time.Date(year, month, 1, 0, 0, 0, 0, currentLocation)
+	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
+	i, err := strconv.Atoi(lastOfMonth.Format("02"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return i
+
 }
 
 func main() {
@@ -253,12 +267,13 @@ func main() {
 	if *now {
 		now := time.Now()
 		particularMoonPhase(now)
+		fmt.Println(now)
 	} else if *weeklyMode {
 		now := time.Now()
 		nextMoonPhases(7, 4, pound, now)
 	} else if *monthlyMode {
 		now := time.Now()
-		nextMoonPhases(28, 2, pound, now)
+		nextMoonPhases(daysInAMonth(now), 2, pound, now)
 	} else if *nextFullMoon {
 		whenNextMoonState("full")
 	} else if *nextNewMoon {
