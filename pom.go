@@ -267,7 +267,6 @@ func main() {
 	if *now {
 		now := time.Now()
 		particularMoonPhase(now)
-		fmt.Println(now)
 	} else if *weeklyMode {
 		now := time.Now()
 		nextMoonPhases(7, 4, pound, now)
