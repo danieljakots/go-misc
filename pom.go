@@ -12,14 +12,13 @@ import (
 )
 
 const (
-	EPOCH                = 90
-	EPSILONg             = 279.403303 /* solar ecliptic long at EPOCH */
-	RHOg                 = 282.768422 /* solar ecliptic long of perigee at EPOCH */
-	ECCEN                = 0.016713   /* solar orbit eccentricity */
-	lzero                = 318.351648 /* lunar mean long at EPOCH */
-	Pzero                = 36.340410  /* lunar mean long of perigee at EPOCH */
-	Nzero                = 318.510107 /* lunar mean long of node at EPOCH */
-	someSpecialTimeStamp = "1989123100"
+	EPOCH    = "1989123100"
+	EPSILONg = 279.403303 /* solar ecliptic long at EPOCH */
+	RHOg     = 282.768422 /* solar ecliptic long of perigee at EPOCH */
+	ECCEN    = 0.016713   /* solar orbit eccentricity */
+	lzero    = 318.351648 /* lunar mean long at EPOCH */
+	Pzero    = 36.340410  /* lunar mean long of perigee at EPOCH */
+	Nzero    = 318.510107 /* lunar mean long of node at EPOCH */
 )
 
 type potm struct {
@@ -84,7 +83,7 @@ func calculatePercentage(days float64) float64 {
 }
 
 func moonPercentage(date time.Time) float64 {
-	someSpecialDate, err := time.Parse("2006010215", someSpecialTimeStamp)
+	someSpecialDate, err := time.Parse("2006010215", EPOCH)
 	if err != nil {
 		log.Panic(err)
 	}
