@@ -11,14 +11,16 @@ import (
 	"time"
 )
 
-const EPOCH = 90
-const EPSILONg = 279.403303 /* solar ecliptic long at EPOCH */
-const RHOg = 282.768422     /* solar ecliptic long of perigee at EPOCH */
-const ECCEN = 0.016713      /* solar orbit eccentricity */
-const lzero = 318.351648    /* lunar mean long at EPOCH */
-const Pzero = 36.340410     /* lunar mean long of perigee at EPOCH */
-const Nzero = 318.510107    /* lunar mean long of node at EPOCH */
-const someSpecialTimeStamp = "1989123100"
+const (
+	EPOCH                = 90
+	EPSILONg             = 279.403303 /* solar ecliptic long at EPOCH */
+	RHOg                 = 282.768422 /* solar ecliptic long of perigee at EPOCH */
+	ECCEN                = 0.016713   /* solar orbit eccentricity */
+	lzero                = 318.351648 /* lunar mean long at EPOCH */
+	Pzero                = 36.340410  /* lunar mean long of perigee at EPOCH */
+	Nzero                = 318.510107 /* lunar mean long of node at EPOCH */
+	someSpecialTimeStamp = "1989123100"
+)
 
 type potm struct {
 	date       time.Time
