@@ -25,7 +25,9 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"net"
 	"os"
+	"time"
 )
 
 func rightCert(myname string, names []string) bool {
@@ -50,13 +52,22 @@ func main() {
 	} else {
 		server = peerName
 	}
+
 	peer := fmt.Sprintf("%s:443", server)
-	conf := &tls.Config{ServerName: peerName}
-	conn, err := tls.Dial("tcp", peer, conf)
+	ipConn, err := net.DialTimeout("tcp", peer, 10 * time.Second)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer ipConn.Close()
+
+	conf := &tls.Config{ServerName: peerName}
+	conn := tls.Client(ipConn, conf)
 	defer conn.Close()
+
+	err = conn.Handshake()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	for _, cert := range conn.ConnectionState().PeerCertificates {
 		if !rightCert(peerName, cert.DNSNames) {
