@@ -37,13 +37,20 @@ func rightCert(myname string, names []string) bool {
 }
 
 func main() {
-	if len(os.Args) != 2 {
+	if len(os.Args) < 2 || len(os.Args) > 3 {
 		fmt.Printf("USAGE: %s domain\n", os.Args[0])
+		fmt.Printf("or     %s domain ip\n", os.Args[0])
 		os.Exit(1)
 	}
 	peerName := os.Args[1]
-	peer := fmt.Sprintf("%s:443", peerName)
-	conf := &tls.Config{}
+	var server string
+	if len(os.Args) == 3 {
+		server = os.Args[2]
+	} else {
+		server = peerName
+	}
+	peer := fmt.Sprintf("%s:443", server)
+	conf := &tls.Config{ServerName: peerName}
 	conn, err := tls.Dial("tcp", peer, conf)
 	if err != nil {
 		fmt.Println(err)
