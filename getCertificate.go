@@ -24,6 +24,7 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -53,8 +54,7 @@ func main() {
 	conf := &tls.Config{ServerName: peerName}
 	conn, err := tls.Dial("tcp", peer, conf)
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatal(err)
 	}
 	defer conn.Close()
 
